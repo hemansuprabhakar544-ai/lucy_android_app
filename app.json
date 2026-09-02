@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Lucy",
+    "slug": "lucy-memory-assistant",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "scheme": "lucy",
+    "android": {
+      "package": "com.hemansu.lucy",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.hemansu.lucy"
+    },
+    "plugins": [
+      "expo-speech"
+    ],
+    "extra": {
+      "eas": {}
+    }
+  }
+}
