@@ -16,8 +16,10 @@
     "ios": {
       "bundleIdentifier": "com.hemansu.lucy"
     },
-   "extra": {
-  "eas": {
-    "projectId": "2fdf140b-db11-4300-a856-57c000139188"
+       "extra": {
+      "eas": {
+        "projectId": "2fdf140b-db11-4300-a856-57c000139188"
+      }
+    }
   }
 }
