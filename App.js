@@ -144,6 +144,10 @@ function Lucy() {
   const [logs, setLogs] = useState([]);
   const [captureText, setCaptureText] = useState("");
 
+  // Voice input
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
+
   // AI recall
   const [queryText, setQueryText] = useState("");
   const [answer, setAnswer] = useState("");
