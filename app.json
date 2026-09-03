@@ -5,6 +5,15 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "plugins": [
+  [
+    "expo-speech-recognition",
+    {
+      "microphonePermission": "Allow Lucy to use the microphone.",
+      "speechRecognitionPermission": "Allow Lucy to convert your speech into text."
+    }
+  ]
+],
     "scheme": "lucy",
     "android": {
       "package": "com.hemansu.lucy",
