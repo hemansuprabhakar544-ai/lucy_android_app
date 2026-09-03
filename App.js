@@ -363,6 +363,24 @@ function Lucy() {
           >
             <Ionicons name="settings-outline" size={20} color="#94a3b8" />
           </TouchableOpacity>
+           <TouchableOpacity
+  onPress={isListening ? stopListening : startListening}
+  className={`mt-3 rounded-xl h-11 items-center justify-center ${
+    isListening ? "bg-red-500" : "bg-[#334155]"
+  }`}
+  accessibilityLabel={isListening ? "Stop listening" : "Start listening"}
+>
+  <View className="flex-row items-center">
+    <Ionicons
+      name={isListening ? "mic" : "mic-outline"}
+      size={18}
+      color="#f8fafc"
+    />
+    <Text className="text-[#f8fafc] font-semibold ml-2">
+      {isListening ? "Listening..." : "Talk to Lucy"}
+    </Text>
+  </View>
+</TouchableOpacity>
         </View>
 
         {/* Timeline, with the capture card as its header so the whole screen scrolls together */}
