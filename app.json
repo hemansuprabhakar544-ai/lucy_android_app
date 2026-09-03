@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Lucy",
-    "slug": "lucy-memory-assistant",
+    "slug": "lucy",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
