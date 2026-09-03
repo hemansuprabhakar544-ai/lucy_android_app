@@ -148,6 +148,26 @@ function Lucy() {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
 
+ // Speech recognition events
+  useSpeechRecognitionEvent("start", () => {
+    setIsListening(true);
+  });
+
+  useSpeechRecognitionEvent("end", () => {
+    setIsListening(false);
+  });
+
+  useSpeechRecognitionEvent("result", (event) => {
+    const text = event.results[0]?.transcript || "";
+    setTranscript(text);
+    setCaptureText(text);
+  });
+
+  useSpeechRecognitionEvent("error", (event) => {
+    console.log("Lucy speech error:", event.error, event.message);
+    setIsListening(false);
+  });
+
   // AI recall
   const [queryText, setQueryText] = useState("");
   const [answer, setAnswer] = useState("");
@@ -200,6 +220,37 @@ function Lucy() {
     } catch (error) {
       Alert.alert("Couldn't save", "Your log wasn't saved to the device. Try again.");
     }
+  };
+    const startListening = async () => {
+    try {
+      const permission =
+        await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+
+      if (!permission.granted) {
+        Alert.alert(
+          "Microphone permission needed",
+          "Please allow Lucy to use the microphone."
+        );
+        return;
+      }
+
+      setTranscript("");
+      setCaptureText("");
+
+      ExpoSpeechRecognitionModule.start({
+        lang: "en-US",
+        interimResults: true,
+        maxAlternatives: 1,
+        continuous: true,
+      });
+    } catch (error) {
+      console.log("Lucy microphone error:", error);
+      setIsListening(false);
+    }
+  };
+
+  const stopListening = () => {
+    ExpoSpeechRecognitionModule.stop();
   };
 
   const handleCapture = async () => {
