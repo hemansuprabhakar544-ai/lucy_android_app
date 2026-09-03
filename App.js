@@ -143,6 +143,14 @@ function Lucy() {
   // Data
   const [logs, setLogs] = useState([]);
   const [captureText, setCaptureText] = useState("");
+  const [voiceReadyToSave, setVoiceReadyToSave] = useState(false);
+
+  useEffect(() => {
+  if (!isListening && voiceReadyToSave && transcript.trim()) {
+    setVoiceReadyToSave(false);
+    handleCapture();
+  }
+}, [isListening, voiceReadyToSave, transcript]);
 
   // Voice input
   const [isListening, setIsListening] = useState(false);
@@ -249,9 +257,10 @@ function Lucy() {
     }
   };
 
-  const stopListening = () => {
-    ExpoSpeechRecognitionModule.stop();
-  };
+ const stopListening = () => {
+  setVoiceReadyToSave(true);
+  ExpoSpeechRecognitionModule.stop();
+};
 
   const handleCapture = async () => {
     const trimmed = captureText.trim();
