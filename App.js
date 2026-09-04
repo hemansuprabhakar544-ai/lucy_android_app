@@ -71,7 +71,7 @@ function buildPrompt(todaysLogs, query) {
   const now = new Date();
   const logLines =
     todaysLogs
-      .map((log) => `• [${formatTime(new Date(log.timestamp))}] ${log.text}`)
+    .map((log) => `• [${formatTime(new Date(log.timestamp))}] ${log.text}`)
       .join("\n") || "(nothing logged yet today)";
 
   return (
