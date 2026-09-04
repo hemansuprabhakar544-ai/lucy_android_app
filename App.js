@@ -320,7 +320,25 @@ const handleVoiceMemory = async () => {
   const text = transcript.trim();
 
   if (!text) return;
+const normalizedText = text
+  .toLowerCase()
+  .replace(/[,.!?]/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
 
+const isLucyCommand =
+  normalizedText.includes("hey lucy") ||
+  normalizedText.includes("okay lucy") ||
+  normalizedText.includes("ok lucy") ||
+  normalizedText.startsWith("lucy ") ||
+  normalizedText.startsWith("remember ") ||
+  normalizedText.startsWith("remember that ") ||
+  normalizedText.startsWith("note ") ||
+  normalizedText.startsWith("please remember ");
+if (!isLucyCommand) {
+  Speech.speak("I didn't save that.");
+  return;
+}
   try {
     if (!apiKey) {
       Alert.alert(
