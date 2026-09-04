@@ -138,7 +138,62 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+async function extractMemory(text, apiKey, model) {
+  const prompt = `
+You are Lucy, a personal memory assistant.
 
+Analyze the user's statement below.
+
+Decide whether it contains information that would be useful to remember later.
+
+Return ONLY valid JSON in exactly this format:
+
+{
+  "shouldRemember": true,
+  "summary": "short clear memory",
+  "category": "task",
+  "importance": "medium"
+}
+
+Allowed categories:
+- task
+- person
+- project
+- preference
+- fact
+- conversation
+
+Allowed importance:
+- low
+- medium
+- high
+
+If the statement is casual conversation with no useful lasting information,
+set "shouldRemember" to false.
+
+User statement:
+"${text}"
+`;
+
+  try {
+    const response = await callGemini(prompt, apiKey, model);
+
+    const cleaned = response
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    return JSON.parse(cleaned);
+  } catch (error) {
+    console.log("Lucy memory extraction error:", error);
+    return {
+      shouldRemember: true,
+      summary: text,
+      category: "conversation",
+      importance: "low",
+    };
+  }
+}
 function Lucy() {
   // Data
   const [logs, setLogs] = useState([]);
@@ -261,7 +316,48 @@ function Lucy() {
   setVoiceReadyToSave(true);
   ExpoSpeechRecognitionModule.stop();
 };
+const handleVoiceMemory = async () => {
+  const text = transcript.trim();
 
+  if (!text) return;
+
+  try {
+    if (!apiKey) {
+      Alert.alert(
+        "Gemini API key needed",
+        "Please add your Gemini API key in Settings."
+      );
+      return;
+    }
+
+    const memory = await extractMemory(text, apiKey, model);
+
+    if (memory.shouldRemember) {
+      const memoryText = `${memory.summary} [${memory.category} • ${memory.importance}]`;
+
+      const entry = {
+        id: Date.now().toString(),
+        text: memoryText,
+        timestamp: new Date().toISOString(),
+      };
+
+      await persistLogs([entry, ...logs]);
+
+      setTranscript("");
+      setCaptureText("");
+
+      Speech.speak("I've remembered that.");
+    } else {
+      Speech.speak("I won't save that as a memory.");
+    }
+  } catch (error) {
+    console.log("Lucy voice memory error:", error);
+    Alert.alert(
+      "Lucy couldn't remember that",
+      error?.message || "Please try again."
+    );
+  }
+};
   const handleCapture = async () => {
     const trimmed = captureText.trim();
     if (!trimmed) return;
